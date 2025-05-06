@@ -14,12 +14,20 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 ./gradlew bootJar
 ```
 
+### Command for using generated JAR file in Dockerfile
+
+```
+...
+java -jar ./build/libs/cloud-app-0.0.1-SNAPSHOT.jar
+```
 ### Running the Application as a Docker Container
 
 ```
 ...
-java -jar ./build/libs/tech-challenge-0.0.1-SNAPSHOT.jar
+docker build -t hello-world .
+docker run -p 8080:8080 hello-world
 ```
+
 
 ### Requirements
 
