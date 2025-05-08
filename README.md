@@ -24,9 +24,26 @@ java -jar ./build/libs/cloud-app-0.0.1-SNAPSHOT.jar
 
 ```
 ...
-docker build -t hello-world .
-docker run -p 8080:8080 hello-world
+docker build -t crickitycrick/cloud-app .
+docker run -p 8080:8080 crickitycrick/cloud-app
 ```
+
+### DockerHub Repository
+
+```
+...
+https://hub.docker.com/repository/docker/crickitycrick/cloud-app/tags
+```
+
+### Running as a service
+
+```
+...
+kubectl create deployment cloud-app-deploy --image=crickitycrick/cloud-app
+kubectl expose deployment cloud-app-deploy --type=NodePort --port=8080 --target-port=8080
+kubectl port-forward service/cloud-app-deploy 8080:8080
+```
+
 
 
 ### Requirements
