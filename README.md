@@ -67,6 +67,12 @@ kubectl rollout status deployments/cloud-app-deploy
 kubectl rollout undo deployments/cloud-app-deploy
 ```
 
+### Configure autoscale of deployment
+
+```
+...
+kubectl autoscale deployment cloud-app-deploy --min=2 --max=10
+```
 
 ### Requirements
 
