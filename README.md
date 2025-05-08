@@ -24,8 +24,8 @@ java -jar ./build/libs/cloud-app-0.0.1-SNAPSHOT.jar
 
 ```
 ...
-docker build -t crickitycrick/cloud-app .
-docker run -p 8080:8080 crickitycrick/cloud-app
+docker build -t crickitycrick/cloud-app:v2 .
+docker run -p 8080:8080 crickitycrick/cloud-app:v2
 ```
 
 ### DockerHub Repository
@@ -35,15 +35,37 @@ docker run -p 8080:8080 crickitycrick/cloud-app
 https://hub.docker.com/repository/docker/crickitycrick/cloud-app/tags
 ```
 
-### Running as a service
+### Running as a Kubernetes Cluster
 
 ```
 ...
-kubectl create deployment cloud-app-deploy --image=crickitycrick/cloud-app
-kubectl expose deployment cloud-app-deploy --type=NodePort --port=8080 --target-port=8080
+kubectl create deployment cloud-app-deploy --image=crickitycrick/cloud-app:latest
+kubectl expose deployment cloud-app-deploy --type=LoadBalancer --port=8080 --target-port=8080
 kubectl port-forward service/cloud-app-deploy 8080:8080
 ```
 
+### Change number of replicas in Deployment
+
+```
+...
+kubectl scale deployments/cloud-app-deploy --replicas=4
+```
+
+### Update the application without downtime
+
+```
+...
+kubectl set image deployments/cloud-app-deploy cloud-app=crickitycrick/cloud-app:v2
+## Verify rollback progress
+kubectl rollout status deployments/cloud-app-deploy
+```
+
+### Rollback to the previous version
+
+```
+...
+kubectl rollout undo deployments/cloud-app-deploy
+```
 
 
 ### Requirements
