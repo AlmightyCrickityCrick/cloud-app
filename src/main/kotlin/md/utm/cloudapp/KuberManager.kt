@@ -19,19 +19,8 @@ class KuberManager {
     }
 
     fun updateDeploymentImage(newImage: String): Boolean {
-
-        val deployment = api.readNamespacedDeployment(deploymentName, namespace, null)
-
-        val containers = deployment.spec?.template?.spec?.containers
-        val target = containers?.firstOrNull { it.name == containerName }
-
-        if (target == null) {
-            println("Container $containerName not found in $deploymentName")
-            return false
-        }
-
-        target.image = newImage
-        api.replaceNamespacedDeployment(deploymentName, namespace, deployment, null, null, null, null)
+        val patch = """{"spec": {"template": { "spec": {"containers": [{ "name": "$containerName", "image": "$newImage"}]}}}}"""
+        api.patchNamespacedDeployment(deploymentName, namespace, io.kubernetes.client.custom.V1Patch(patch), null, null, null, null, true)
         println("Updated image of container '$containerName' in deployment '$deploymentName' to '$newImage'")
         return true
     }
