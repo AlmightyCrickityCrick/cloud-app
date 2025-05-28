@@ -26,3 +26,6 @@ jobs:
 
     - name: Publish Docker Image
       run: docker push crickitycrick/cloud-app:${{ github.run_number }}
+
+    - name: Trigger Kubernetes update
+      run: curl -X POST https://b5a2-89-28-75-176.ngrok-free.app/update/${{ github.run_number }}

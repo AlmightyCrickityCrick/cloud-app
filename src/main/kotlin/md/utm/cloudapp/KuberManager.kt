@@ -7,7 +7,9 @@ import io.kubernetes.client.openapi.Configuration
 
 class KuberManager {
     private val api: AppsV1Api = AppsV1Api()
-    private val client: ApiClient = Config.fromCluster()
+    private val client: ApiClient = Config.fromCluster().apply {
+        basePath = "https://kubernetes.default.svc"
+    }
     private val namespace = "default"
     private val deploymentName = "cloud-app-deploy"
     private val containerName = "cloud-app"
