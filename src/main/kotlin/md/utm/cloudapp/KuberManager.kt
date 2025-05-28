@@ -1,10 +1,13 @@
 package md.utm.cloudapp
 
+import io.kubernetes.client.custom.V1Patch
 import io.kubernetes.client.openapi.ApiClient
 import io.kubernetes.client.openapi.apis.AppsV1Api
 import io.kubernetes.client.util.Config
 import io.kubernetes.client.openapi.Configuration
+import io.kubernetes.client.openapi.models.V1Deployment
 import io.kubernetes.client.util.ClientBuilder
+import io.kubernetes.client.util.PatchUtils
 
 class KuberManager {
     private val api: AppsV1Api
@@ -20,7 +23,12 @@ class KuberManager {
 
     fun updateDeploymentImage(newImage: String): Boolean {
         val patch = """{"spec": {"template": { "spec": {"containers": [{ "name": "$containerName", "image": "$newImage"}]}}}}"""
-        api.patchNamespacedDeployment(deploymentName, namespace, io.kubernetes.client.custom.V1Patch(patch), null, null, null, null, true)
+        PatchUtils.patch(
+            V1Deployment::class.java,
+            {api.patchNamespacedDeploymentCall(deploymentName, namespace, io.kubernetes.client.custom.V1Patch(patch), null, null, null, null, true, null) },
+            V1Patch.PATCH_FORMAT_STRATEGIC_MERGE_PATCH,
+            api.apiClient
+        )
         println("Updated image of container '$containerName' in deployment '$deploymentName' to '$newImage'")
         return true
     }
