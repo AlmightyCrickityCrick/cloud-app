@@ -2,6 +2,7 @@ package md.utm.cloudapp
 
 import io.kubernetes.client.custom.V1Patch
 import io.kubernetes.client.openapi.ApiClient
+import io.kubernetes.client.openapi.ApiException
 import io.kubernetes.client.openapi.apis.AppsV1Api
 import io.kubernetes.client.util.Config
 import io.kubernetes.client.openapi.Configuration
@@ -23,12 +24,18 @@ class KuberManager {
 
     fun updateDeploymentImage(newImage: String): Boolean {
         val patch = """[{ "op" : "replace", "path": "/spec/template/spec/containers/0/image", "value": "$newImage"}]"""
-        PatchUtils.patch(
+        try {
+            PatchUtils.patch(
             V1Deployment::class.java,
             {api.patchNamespacedDeploymentCall(deploymentName, namespace, io.kubernetes.client.custom.V1Patch(patch), null, null, null, null, true, null) },
             V1Patch.PATCH_FORMAT_JSON_PATCH,
             api.apiClient
-        )
+        ) } catch (e: ApiException) {
+            println("Status code: ${e.code}")
+            println("Response body: ${e.responseBody}")
+            println("Response headers: ${e.responseHeaders}")
+            e.printStackTrace()
+        }
         println("Updated image of container '$containerName' in deployment '$deploymentName' to '$newImage'")
         return true
     }
