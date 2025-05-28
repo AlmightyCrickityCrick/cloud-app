@@ -12,7 +12,7 @@ class MainController {
 
     @GetMapping("/")
     fun main(): String {
-        return "Hello World! Ribbit!"
+        return "Hello World! Gecko!"
     }
 
     @PostMapping("/update/{version}")
