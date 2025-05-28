@@ -22,11 +22,11 @@ class KuberManager {
     }
 
     fun updateDeploymentImage(newImage: String): Boolean {
-        val patch = """{"spec": {"template": { "spec": {"containers": [{ "name": "$containerName", "image": "$newImage"}]}}}}"""
+        val patch = """[{ "op" : "replace", "path": "/spec/template/spec/containers/0/image", "value": "$newImage"}]"""
         PatchUtils.patch(
             V1Deployment::class.java,
             {api.patchNamespacedDeploymentCall(deploymentName, namespace, io.kubernetes.client.custom.V1Patch(patch), null, null, null, null, true, null) },
-            V1Patch.PATCH_FORMAT_STRATEGIC_MERGE_PATCH,
+            V1Patch.PATCH_FORMAT_JSON_PATCH,
             api.apiClient
         )
         println("Updated image of container '$containerName' in deployment '$deploymentName' to '$newImage'")
