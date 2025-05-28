@@ -27,7 +27,7 @@ class KuberManager {
         try {
             PatchUtils.patch(
             V1Deployment::class.java,
-            {api.patchNamespacedDeploymentCall(deploymentName, namespace, io.kubernetes.client.custom.V1Patch(patch), null, null, null, null, true, null) },
+            {api.patchNamespacedDeploymentCall(deploymentName, namespace, io.kubernetes.client.custom.V1Patch(patch), null, null, null, null, false, null) },
             V1Patch.PATCH_FORMAT_JSON_PATCH,
             api.apiClient
         ) } catch (e: ApiException) {
