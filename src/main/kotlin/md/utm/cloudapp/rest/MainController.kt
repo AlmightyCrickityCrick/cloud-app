@@ -12,7 +12,7 @@ class MainController {
 
     @GetMapping("/")
     fun main(): String {
-        return "Why are we here? Just to suffer?"
+        return "O in UTM vine de la organizare"
     }
 
     @PostMapping("/update/{version}")
